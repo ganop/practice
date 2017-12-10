@@ -9,8 +9,7 @@ import static org.junit.Assert.*;
 
 public class AppTest {
     @Test
-    public void HttpRequestGetTest() throws Exception {
-        URL google = new URL("https", "www.google.co.uk", "/");
+    public void HttpRequestPostRequestReturnsStatusTwoHundred() throws Exception {
 
         assertTrue(true);
     }
