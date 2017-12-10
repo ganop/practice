@@ -38,21 +38,20 @@ public class App {
         String payload = gson.toJson(json);
         StringEntity entity = new StringEntity(payload);
         httpPost.setEntity(entity);
-
         Map<String, String> headers = new HashMap<>();
         headers.put(HttpHeaders.ACCEPT, "application/json");
         headers.put(HttpHeaders.CONTENT_TYPE, "application/json;charset=utf-8");
         headers.forEach(httpPost::setHeader);
 
-        try (CloseableHttpResponse response2 = httpclient.execute(httpPost)) {
-            HttpEntity entity2 = response2.getEntity();
-            // do something useful with the response body
-            // and ensure it is fully consumed
-            //entity2.writeTo(new BufferedOutputStream(System.out));
-            BufferedReader br = new BufferedReader(new InputStreamReader(entity2.getContent()));
-            br.lines().forEach(System.out::println);
+        try (CloseableHttpResponse response = httpclient.execute(httpPost)) {
+            HttpEntity responseEntity = response.getEntity();
+            BufferedReader br = new BufferedReader(new InputStreamReader(responseEntity.getContent()));
+            JsonObject responsePayload = gson.fromJson(br, JsonObject.class);
+            String token = responsePayload.getAsJsonPrimitive("token").getAsString();
 
-            EntityUtils.consume(entity2);
+            //entity2.writeTo(new BufferedOutputStream(System.out));
+            System.out.println("token = " + token);
+            EntityUtils.consume(responseEntity);
         }
     }
 }

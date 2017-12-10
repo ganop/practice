@@ -2,14 +2,13 @@ package com.github.ganop;
 
 import org.junit.Test;
 
-import javax.net.ssl.HttpsURLConnection;
-import java.net.URL;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class AppTest {
     @Test
-    public void HttpRequestPostRequestReturnsStatusTwoHundred() throws Exception {
+    public void requestHandlerCreatesGetRequestWhenGetMethodChosen() throws Exception {
+        String method = "get";
+        String uri = "https://www.google.co.uk/";
 
         assertTrue(true);
     }
