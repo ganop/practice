@@ -68,7 +68,7 @@ public class CosyEndpointExtractor implements DataExtractor {
     }
 
     @Override
-    public Data getData() {
+    public TemperatureEntry getData() {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpUriRequest dataRequest = prepareRequest(COSY_DATA_ENDPOINT, "get");
         try (CloseableHttpResponse response = httpClient.execute(dataRequest)){
