@@ -13,7 +13,7 @@ public class AppTest {
         String method = "get";
         String uri = "https://www.google.co.uk/";
 
-        RequestHandler rh = new RequestHandler(method, uri);
+        RequestBuilder rh = new RequestBuilderBuilder().setMethod(method).setUri(uri).createRequestBuilder();
         HttpRequest request = rh.getRequest();
 
         assertThat(request, instanceOf(HttpGet.class));
