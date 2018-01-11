@@ -77,7 +77,11 @@ public class CosyEndpointExtractor implements DataExtractor {
 
             Gson gson = new Gson();
             JsonObject responsePayload = gson.fromJson(br, JsonObject.class);
+            String timestamp = responsePayload.get("utc").getAsString();
+            float temperature = responsePayload.getAsJsonArray("temperatureList").get(0).getAsFloat();
+            TemperatureEntry temperatureEntry = new TemperatureEntry(timestamp, temperature);
 
+            EntityUtils.consume(responseEntity);
         } catch (IOException e) {
             e.printStackTrace();
         }
