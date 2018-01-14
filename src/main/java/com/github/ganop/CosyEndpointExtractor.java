@@ -59,6 +59,7 @@ public class CosyEndpointExtractor implements DataExtractor {
 
     @Override
     public boolean disconnect() {
+        //TODO
         return false;
     }
 

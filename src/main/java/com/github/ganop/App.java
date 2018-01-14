@@ -6,9 +6,10 @@ public class App {
 
     public static void main(String[] args) {
         DataExtractor de = new CosyEndpointExtractor();
-        TemperatureEntry temp = de.getData();
-        System.out.println(temp.toString());
-
+        if (de.connect()){
+            TemperatureEntry temp = de.getData();
+            System.out.println(temp.toString());
+        }
 //
 //        AppDao ad = new AppDao();
 //        ad.save(temp);
