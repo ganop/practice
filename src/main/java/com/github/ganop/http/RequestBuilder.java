@@ -10,26 +10,31 @@ public class RequestBuilder {
 
 
     public RequestBuilder() {
-
+        //TODO
     }
 
     public RequestBuilder withMethod(String method) {
+        //TODO
         return null;
     }
 
     public RequestBuilder withHeaders(Map<String, String> headers) {
+        //TODO
         return null;
     }
 
     public RequestBuilder withEntity(StringEntity entity) {
+        //TODO
         return null;
     }
 
     public HttpUriRequest build() {
+        //TODO
         return null;
     }
 
     public RequestBuilder withURL(String url) {
+        //TODO
         return null;
     }
 }

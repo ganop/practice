@@ -44,7 +44,7 @@ public enum CosyEndpoint {
                 break;
 
             case "temp_data":
-                this.URL = "https://cosy.geotogether.com/api/userapi/system/cosy-live-data/";
+                this.URL = "https://cosy.geotogether.com/api/userapi/system/cosy-live-data/" + System.getenv("syscode");
                 this.METHOD =HttpGet.METHOD_NAME;
 
                 prepHeaders = new HashMap<>();

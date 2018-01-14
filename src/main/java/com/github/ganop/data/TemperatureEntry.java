@@ -17,4 +17,12 @@ public class TemperatureEntry {
     public float getTemperature() {
         return temperature;
     }
+
+    @Override
+    public String toString() {
+        return "TemperatureEntry{" +
+                "timestamp='" + timestamp + '\'' +
+                ", temperature=" + temperature +
+                '}';
+    }
 }
