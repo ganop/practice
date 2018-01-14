@@ -1,4 +1,4 @@
-package com.github.ganop;
+package com.github.ganop.data;
 
 public class TemperatureEntry {
     private final String timestamp;

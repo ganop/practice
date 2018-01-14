@@ -1,4 +1,4 @@
-package com.github.ganop;
+package com.github.ganop.http;
 
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
@@ -6,10 +6,11 @@ import org.apache.http.entity.StringEntity;
 import java.util.Map;
 
 public class RequestBuilder {
-    private final String uri;
+    private String uri;
 
-    public RequestBuilder(String uri) {
-        this.uri = uri;
+
+    public RequestBuilder() {
+
     }
 
     public RequestBuilder withMethod(String method) {
@@ -25,6 +26,10 @@ public class RequestBuilder {
     }
 
     public HttpUriRequest build() {
+        return null;
+    }
+
+    public RequestBuilder withURL(String url) {
         return null;
     }
 }

@@ -1,65 +1,43 @@
 package com.github.ganop;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import org.apache.commons.codec.Charsets;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
+import com.github.ganop.data.TemperatureEntry;
+import com.github.ganop.http.CosyEndpoint;
+import com.github.ganop.http.RequestBuilder;
+import com.github.ganop.http.ResponseHandler;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
 
 public class CosyEndpointExtractor implements DataExtractor {
-    private static final String COSY_DATA_ENDPOINT = "https://cosy.geotogether.com/api/userapi/system/cosy-live-data/";
     private String token;
-    private static final String COSY_ENDPOINT_URL = "https://cosy.geotogether.com/api/userapi/account/login";
+    private RequestBuilder rBuilder;
+    private ResponseHandler rHandler;
+    private CloseableHttpClient client;
 
+    public CosyEndpointExtractor() {
+        this.rBuilder = new RequestBuilder();
+        this.rHandler = new ResponseHandler();
+        this.client = HttpClients.createDefault();
+    }
 
-    private HttpUriRequest prepareRequest(String url, String method) {
-        Map<String, String> headers = new HashMap<>();
-        headers.put(HttpHeaders.ACCEPT, "application/json");
-        headers.put(HttpHeaders.CONTENT_TYPE, "application/json;charset=utf-8");
+    private HttpUriRequest prepareRequest(CosyEndpoint cosyEndpoint) {
+        rBuilder.withURL(cosyEndpoint.URL);
+        rBuilder.withMethod(cosyEndpoint.METHOD);
+        rBuilder.withHeaders(cosyEndpoint.HEADERS);
+        rBuilder.withEntity(cosyEndpoint.ENTITY);
 
-        Gson gson = new Gson();
-        JsonObject json = new JsonObject();
-        json.add("name", new JsonPrimitive(System.getenv("name")));
-        json.add("password", new JsonPrimitive(System.getenv("password")));
-
-        String payload = gson.toJson(json);
-        StringEntity entity = new StringEntity(payload, Charsets.UTF_8);
-
-        RequestBuilder builder = new RequestBuilder(url);
-        builder.withMethod(method);
-        builder.withHeaders(headers);
-        builder.withEntity(entity);
-
-        return builder.build();
+        return rBuilder.build();
     }
 
     @Override
     public boolean connect() {
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpUriRequest loginRequest = prepareRequest(COSY_ENDPOINT_URL, "post");
-        try (CloseableHttpResponse response = httpclient.execute(loginRequest)) {
-            HttpEntity responseEntity = response.getEntity();
-            BufferedReader br = new BufferedReader(new InputStreamReader(responseEntity.getContent()));
-
-            Gson gson = new Gson();
-            JsonObject responsePayload = gson.fromJson(br, JsonObject.class);
-
-            setToken(responsePayload.getAsJsonPrimitive("token").getAsString());
-
-            EntityUtils.consume(responseEntity);
+        HttpUriRequest loginRequest = prepareRequest(CosyEndpoint.LOGIN_ENDPOINT);
+        try (CloseableHttpResponse response = client.execute(loginRequest)) {
+            String token = (String) rHandler.handle(response,"token");
+            setToken(token);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -69,19 +47,10 @@ public class CosyEndpointExtractor implements DataExtractor {
 
     @Override
     public TemperatureEntry getData() {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpUriRequest dataRequest = prepareRequest(COSY_DATA_ENDPOINT, "get");
-        try (CloseableHttpResponse response = httpClient.execute(dataRequest)){
-            HttpEntity responseEntity = response.getEntity();
-            BufferedReader br = new BufferedReader(new InputStreamReader(responseEntity.getContent()));
-
-            Gson gson = new Gson();
-            JsonObject responsePayload = gson.fromJson(br, JsonObject.class);
-            String timestamp = responsePayload.get("utc").getAsString();
-            float temperature = responsePayload.getAsJsonArray("temperatureList").get(0).getAsFloat();
-            TemperatureEntry temperatureEntry = new TemperatureEntry(timestamp, temperature);
-
-            EntityUtils.consume(responseEntity);
+        HttpUriRequest dataRequest = prepareRequest(CosyEndpoint.TEMP_DATA_ENDPOINT);
+        try (CloseableHttpResponse response = client.execute(dataRequest)){
+            TemperatureEntry temp = (TemperatureEntry) rHandler.handle(response, "data");
+            return temp;
         } catch (IOException e) {
             e.printStackTrace();
         }

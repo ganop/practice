@@ -1,5 +1,6 @@
 package com.github.ganop;
 
+import com.github.ganop.http.RequestBuilder;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.HttpGet;
 import org.junit.Test;
