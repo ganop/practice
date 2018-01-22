@@ -64,8 +64,11 @@ public enum CosyEndpoint {
     }
 
     public void setSecurityToken(String token){
+        if (token.contains(" ")){
+            throw new IllegalArgumentException("Token was not a valid security token string");
+        }
         String oldToken = this.HEADERS.get(HttpHeaders.AUTHORIZATION);
-        this.HEADERS.replace(HttpHeaders.AUTHORIZATION, oldToken,oldToken + token);
+        this.HEADERS.replace(HttpHeaders.AUTHORIZATION, oldToken,"Bearer " + token);
 
     }
 }

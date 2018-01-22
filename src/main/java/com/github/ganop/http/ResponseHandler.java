@@ -16,7 +16,7 @@ public class ResponseHandler {
     private JsonObject responsePayload;
 
 
-    ResponseHandler() {
+    public ResponseHandler() {
         this.gson = new Gson();
         this.responsePayload = new JsonObject();
     }
