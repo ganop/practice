@@ -1,17 +1,24 @@
 package com.github.ganop.http;
 
 import org.apache.http.HttpHeaders;
+import org.junit.After;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class CosyEndpointTest {
+    private CosyEndpoint testEndpoint = CosyEndpoint.TEMP_DATA_ENDPOINT;
+
+    @After
+    public void cleanUp(){
+        assert testEndpoint.HEADERS != null;
+        testEndpoint.HEADERS.clear();
+    }
+
     @Test
     public void setTokenMethodSetsValidAuthorizationString() {
         String authorization = "ASHFNASknISNXO09092uhrqha9donb3";
-        CosyEndpoint testEndpoint = CosyEndpoint.TEMP_DATA_ENDPOINT;
-
         testEndpoint.setSecurityToken(authorization);
 
         assert testEndpoint.HEADERS != null;
@@ -23,7 +30,6 @@ public class CosyEndpointTest {
     public void setTokenMethodOverwritesPreviousToken() {
         String token1 = "ASHFNASknISNXO09092uhrqha9donb3";
         String token2 = "ASJOlUAmHEFO79ATERGb76aert967";
-        CosyEndpoint testEndpoint = CosyEndpoint.TEMP_DATA_ENDPOINT;
 
         testEndpoint.setSecurityToken(token1);
         String authorization1 = testEndpoint.HEADERS.get(HttpHeaders.AUTHORIZATION);
@@ -37,10 +43,14 @@ public class CosyEndpointTest {
     @Test(expected = IllegalArgumentException.class)
     public void setTokenMethodDoesNotAcceptSpacesInToken() {
         String token1 = "ASHFNASknISNXO09092 uhrqha9donb3";
-        CosyEndpoint testEndpoint = CosyEndpoint.TEMP_DATA_ENDPOINT;
 
         testEndpoint.setSecurityToken(token1);
         String authorization1 = testEndpoint.HEADERS.get(HttpHeaders.AUTHORIZATION);
+    }
+
+    @Test
+    public void noAuthorizationHeaderExistsIfTokenNotSet() {
+        assertThat(testEndpoint.HEADERS.keySet(), not(hasItem(HttpHeaders.AUTHORIZATION)));
     }
 
 }

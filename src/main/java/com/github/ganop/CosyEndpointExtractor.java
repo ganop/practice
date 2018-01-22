@@ -11,6 +11,9 @@ import org.apache.http.impl.client.HttpClients;
 
 import java.io.IOException;
 
+import static com.github.ganop.http.CosyEndpoint.LOGIN_ENDPOINT;
+import static com.github.ganop.http.CosyEndpoint.TEMP_DATA_ENDPOINT;
+
 public class CosyEndpointExtractor implements DataExtractor {
     private String token;
     private RequestBuilder rBuilder;
@@ -26,6 +29,9 @@ public class CosyEndpointExtractor implements DataExtractor {
     private HttpUriRequest prepareRequest(CosyEndpoint cosyEndpoint) {
         rBuilder.withURL(cosyEndpoint.URL);
         rBuilder.withMethod(cosyEndpoint.METHOD);
+        if (cosyEndpoint == TEMP_DATA_ENDPOINT){
+            cosyEndpoint.setSecurityToken(getToken());
+        }
         rBuilder.withHeaders(cosyEndpoint.HEADERS);
         rBuilder.withEntity(cosyEndpoint.ENTITY);
 
@@ -34,7 +40,7 @@ public class CosyEndpointExtractor implements DataExtractor {
 
     @Override
     public boolean connect() {
-        HttpUriRequest loginRequest = prepareRequest(CosyEndpoint.LOGIN_ENDPOINT);
+        HttpUriRequest loginRequest = prepareRequest(LOGIN_ENDPOINT);
         try (CloseableHttpResponse response = client.execute(loginRequest)) {
             String token = (String) rHandler.handle(response,"token");
             setToken(token);
@@ -47,7 +53,7 @@ public class CosyEndpointExtractor implements DataExtractor {
 
     @Override
     public TemperatureEntry getData() {
-        HttpUriRequest dataRequest = prepareRequest(CosyEndpoint.TEMP_DATA_ENDPOINT);
+        HttpUriRequest dataRequest = prepareRequest(TEMP_DATA_ENDPOINT);
         try (CloseableHttpResponse response = client.execute(dataRequest)){
             TemperatureEntry temp = (TemperatureEntry) rHandler.handle(response, "data");
             return temp;

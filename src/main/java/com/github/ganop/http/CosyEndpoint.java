@@ -35,7 +35,7 @@ public enum CosyEndpoint {
 
 
                 JsonObject json = new JsonObject();
-                json.add("name", new JsonPrimitive(System.getenv("name")));
+                json.add("name", new JsonPrimitive(System.getenv("name")));//TODO Need to allow for use of .properties
                 json.add("password", new JsonPrimitive(System.getenv("password")));
 
                 String payload = json.toString();
@@ -48,7 +48,6 @@ public enum CosyEndpoint {
                 this.METHOD =HttpGet.METHOD_NAME;
 
                 prepHeaders = new HashMap<>();
-                prepHeaders.put(HttpHeaders.AUTHORIZATION, "Bearer ");
                 this.HEADERS =prepHeaders;
 
                 this.ENTITY =null;
@@ -67,8 +66,6 @@ public enum CosyEndpoint {
         if (token.contains(" ")){
             throw new IllegalArgumentException("Token was not a valid security token string");
         }
-        String oldToken = this.HEADERS.get(HttpHeaders.AUTHORIZATION);
-        this.HEADERS.replace(HttpHeaders.AUTHORIZATION, oldToken,"Bearer " + token);
-
+        this.HEADERS.put(HttpHeaders.AUTHORIZATION,"Bearer " + token);
     }
 }
