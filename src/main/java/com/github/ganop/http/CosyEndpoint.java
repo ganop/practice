@@ -15,23 +15,40 @@ public enum CosyEndpoint {
     LOGIN_ENDPOINT("login"),
     TEMP_DATA_ENDPOINT("temp_data");
 
-    public final String URL;
-    public final String METHOD;
-    public final Map<String, String> HEADERS;
-    public final StringEntity ENTITY;
+    private final String url;
+    private final String method;
+    private final Map<String, String> headers;
+    private final StringEntity entity;
+
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public StringEntity getEntity() {
+        return entity;
+    }
 
 
     CosyEndpoint(String type) {
         Map<String, String> prepHeaders;
         switch (type){
             case "login":
-                this.URL = "https://cosy.geotogether.com/api/userapi/account/login";
-                this.METHOD = HttpPost.METHOD_NAME;
+                this.url = "https://cosy.geotogether.com/api/userapi/account/login";
+                this.method = HttpPost.METHOD_NAME;
 
                 prepHeaders = new HashMap<>();
                 prepHeaders.put(HttpHeaders.ACCEPT, "application/json");
                 prepHeaders.put(HttpHeaders.CONTENT_TYPE, "application/json;charset=utf-8");
-                this.HEADERS =prepHeaders;
+                this.headers =prepHeaders;
 
 
                 JsonObject json = new JsonObject();
@@ -39,26 +56,26 @@ public enum CosyEndpoint {
                 json.add("password", new JsonPrimitive(System.getenv("password")));
 
                 String payload = json.toString();
-                this.ENTITY = new StringEntity(payload, Charsets.UTF_8);
+                this.entity = new StringEntity(payload, Charsets.UTF_8);
 
                 break;
 
             case "temp_data":
-                this.URL = "https://cosy.geotogether.com/api/userapi/system/cosy-live-data/" + System.getenv("syscode");
-                this.METHOD =HttpGet.METHOD_NAME;
+                this.url = "https://cosy.geotogether.com/api/userapi/system/cosy-live-data/" + System.getenv("syscode");
+                this.method =HttpGet.METHOD_NAME;
 
                 prepHeaders = new HashMap<>();
-                this.HEADERS =prepHeaders;
+                this.headers =prepHeaders;
 
-                this.ENTITY =null;
+                this.entity =null;
 
                 break;
 
             default:
-                this.URL = null;
-                this.ENTITY = null;
-                this.METHOD = null;
-                this.HEADERS = null;
+                this.url = null;
+                this.entity = null;
+                this.method = null;
+                this.headers = null;
         }
     }
 
@@ -66,6 +83,6 @@ public enum CosyEndpoint {
         if (token.contains(" ")){
             throw new IllegalArgumentException("Token was not a valid security token string");
         }
-        this.HEADERS.put(HttpHeaders.AUTHORIZATION,"Bearer " + token);
+        this.getHeaders().put(HttpHeaders.AUTHORIZATION,"Bearer " + token);
     }
 }

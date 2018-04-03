@@ -12,8 +12,8 @@ public class CosyEndpointTest {
 
     @After
     public void cleanUp(){
-        assert testEndpoint.HEADERS != null;
-        testEndpoint.HEADERS.clear();
+        assert testEndpoint.getHeaders() != null;
+        testEndpoint.getHeaders().clear();
     }
 
     @Test
@@ -21,9 +21,9 @@ public class CosyEndpointTest {
         String authorization = "ASHFNASknISNXO09092uhrqha9donb3";
         testEndpoint.setSecurityToken(authorization);
 
-        assert testEndpoint.HEADERS != null;
-        assertThat(testEndpoint.HEADERS.keySet(), hasItem(HttpHeaders.AUTHORIZATION));
-        assertThat(testEndpoint.HEADERS.get(HttpHeaders.AUTHORIZATION), is("Bearer " + authorization));
+        assert testEndpoint.getHeaders() != null;
+        assertThat(testEndpoint.getHeaders().keySet(), hasItem(HttpHeaders.AUTHORIZATION));
+        assertThat(testEndpoint.getHeaders().get(HttpHeaders.AUTHORIZATION), is("Bearer " + authorization));
     }
 
     @Test
@@ -32,9 +32,9 @@ public class CosyEndpointTest {
         String token2 = "ASJOlUAmHEFO79ATERGb76aert967";
 
         testEndpoint.setSecurityToken(token1);
-        String authorization1 = testEndpoint.HEADERS.get(HttpHeaders.AUTHORIZATION);
+        String authorization1 = testEndpoint.getHeaders().get(HttpHeaders.AUTHORIZATION);
         testEndpoint.setSecurityToken(token2);
-        String authorization2 = testEndpoint.HEADERS.get(HttpHeaders.AUTHORIZATION);
+        String authorization2 = testEndpoint.getHeaders().get(HttpHeaders.AUTHORIZATION);
 
         assertThat(authorization2, not(authorization1));
     }
@@ -45,12 +45,12 @@ public class CosyEndpointTest {
         String token1 = "ASHFNASknISNXO09092 uhrqha9donb3";
 
         testEndpoint.setSecurityToken(token1);
-        String authorization1 = testEndpoint.HEADERS.get(HttpHeaders.AUTHORIZATION);
+        String authorization1 = testEndpoint.getHeaders().get(HttpHeaders.AUTHORIZATION);
     }
 
     @Test
     public void noAuthorizationHeaderExistsIfTokenNotSet() {
-        assertThat(testEndpoint.HEADERS.keySet(), not(hasItem(HttpHeaders.AUTHORIZATION)));
+        assertThat(testEndpoint.getHeaders().keySet(), not(hasItem(HttpHeaders.AUTHORIZATION)));
     }
 
 }
