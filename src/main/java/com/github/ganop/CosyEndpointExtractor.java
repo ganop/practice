@@ -27,15 +27,16 @@ public class CosyEndpointExtractor implements DataExtractor {
     }
 
     private HttpUriRequest prepareRequest(CosyEndpoint cosyEndpoint) {
-        rBuilder.newRequest();
-        rBuilder.withURL(cosyEndpoint.getUrl()).withMethod(cosyEndpoint.getMethod());
-        if (cosyEndpoint == TEMP_DATA_ENDPOINT){
+        if (cosyEndpoint == TEMP_DATA_ENDPOINT) {
             cosyEndpoint.setSecurityToken(getToken());
         }
-        rBuilder.withHeaders(cosyEndpoint.getHeaders());
-        rBuilder.withEntity(cosyEndpoint.getEntity());
 
-        return rBuilder.build();
+        return rBuilder.newRequest()
+                .withURL(cosyEndpoint.getUrl())
+                .withMethod(cosyEndpoint.getMethod())
+                .withHeaders(cosyEndpoint.getHeaders())
+                .withEntity(cosyEndpoint.getEntity())
+                .build();
     }
 
     @Override

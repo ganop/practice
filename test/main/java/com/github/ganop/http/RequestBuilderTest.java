@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class RequestBuilderTest {
 
@@ -49,14 +50,57 @@ public class RequestBuilderTest {
     }
 
     @Test
-    public void withEntity() {
+    public void withHeadersCannotBeCalledBeforeUrlOrMethod() {
+        fail();
+    }
+
+    @Test
+    public void withHeadersSetsRequiredHeaders() {
+        fail();
+    }
+    @Test
+    public void withHeadersWorksWhenEmpty() {
+        fail();
+    }
+
+    @Test
+    public void withHeadersWorksWhenNull() {
+        fail();
+    }
+
+    @Test
+    public void buildSetsNoHeadersWhenHeadersMethodNotCalled() {
+        fail();
+    }
+
+    @Test
+    public void withEntityOnlyAllowedForPost() {
+        fail();
+    }
+
+    @Test
+    public void withEntityCannotBeCalledBeforeUrlAndMethod() {
+        fail();
+    }
+
+    @Test
+    public void withEntitySetsRequiredEntity() {
+        fail();
     }
 
     @Test
     public void build() {
+        //TODO test cases for the build() Method;
     }
 
     @Test
-    public void withURL() {
+    public void withURLSetsRequiredUrlOnBuilder() {
+        fail();
     }
+
+    @Test
+    public void withURLSetsRequiredUrlOnRequest() {
+        fail();
+    }
+
 }

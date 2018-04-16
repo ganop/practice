@@ -21,6 +21,7 @@ public class RequestBuilder {
 
     public RequestBuilder() {
         this.step=1;
+        this.headers = new ArrayList<>();
 
     }
 
@@ -65,11 +66,11 @@ public class RequestBuilder {
         switch (this.method) {
             case "GET":
                 HttpGet httpGet = new HttpGet(this.uri);
-                httpGet.setHeaders((Header[]) headers.toArray());
+                httpGet.setHeaders(headers.toArray(new Header[0]));
                 return httpGet;
             case "POST":
                 HttpPost httpPost = new HttpPost(this.uri);
-                httpPost.setHeaders((Header[]) headers.toArray());
+                httpPost.setHeaders(headers.toArray(new Header[0]));
                 httpPost.setEntity(entity);
                 return httpPost;
             default:
@@ -84,9 +85,11 @@ public class RequestBuilder {
         return this;
     }
 
-    public void newRequest() {
+    public RequestBuilder newRequest() {
         this.uri=null;
         this.method=null;
         this.step=1;
+
+        return this;
     }
 }
